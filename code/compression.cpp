@@ -22,12 +22,39 @@
 */
 
 #include <vector>
+#include <unordered_map>
 
 #include "util.hpp"
 
 namespace ctc {
-	void lzw(u16 dict_size, std::string) {
+	std::vector<u16> &lzw_encode(u16 dict_size, std::string text) {
 		std::vector<u16> *out = new std::vector<u16>();
-		
+		std::unordered_map<std::string, u16> *dict = new std::unordered_map<std::string, u16>();
+
+		for(int i = 0; i < 256; ++i)
+			(*dict)[std::string(1, (char)i)] = i;
+
+		u16 next_code = 257;
+		std::string token;
+		for(std::string::iterator it = text.begin(); it != text.end(); ++it) {
+			token.push_back(*it);
+			
+			// If the token is not in the dictionary.
+			if(dict->find(token) == dict->end()) {
+				// If we did not exceed dictionary limit.
+				if(next_code < dict_size) {
+					(*dict)[token] = next_code++;
+					out->push_back(dict->at(token));
+				}
+				else {
+					--it;
+					token.pop_back();
+					out->push_back(dict->at(token));
+				}
+				token.clear();
+			}
+		}
+
+		return *out;
 	}
 }
