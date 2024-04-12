@@ -1,4 +1,8 @@
 #include <string>
+#include <functional>
+#include <cmath>
+
+#include "util.hpp"
 #include "measure.hpp"
 #include "compression.hpp"
 
@@ -24,5 +28,11 @@
 */
 
 namespace ctc {
-
+	int lzw_measure(std::string &text, std::function<std::vector<u16>&(std::string&)> lzw) {
+		return lzw(text).size();
+	}
+	
+	int lzw_distance(std::string a, std::string b, std::function<std::vector<u16>&(std::string&)> lzw) {
+		return std::abs(lzw_measure(a, lzw) - lzw_measure(b, lzw));
+	}
 }
