@@ -9,10 +9,10 @@ namespace ctc {
 	std::vector<u16> &lzw_encode(u16 dict_size, std::string &text) {
 		std::vector<u16> *out = new std::vector<u16>();
 		std::unordered_map<std::string, u16> *dict = new std::unordered_map<std::string, u16>();
-
+	
 		for(u16 i = 0; i < 256; ++i)
 			(*dict)[std::string(1, (char)i)] = i;
-
+	
 		u16 next_code = 256;
 		std::string token;
 		std::string token_wide;
@@ -34,10 +34,10 @@ namespace ctc {
 			
 			token = token_wide;
 		}
-
+	
 		if(!token.empty())
 			out->push_back(dict->at(token));
-
+	
 		return *out;
 	}
 
@@ -66,5 +66,30 @@ namespace ctc {
 		}
 
 		return *out;
+	}
+
+	// TODO: Maybe do this with non-type template and move to non cpp file.
+	std::vector<u16> &lzw_encode_8192(std::string &text) {
+		return lzw_encode(8192, text);
+	}
+	
+	std::vector<u16> &lzw_encode_4096(std::string &text) {
+		return lzw_encode(4096, text);
+	}
+	
+	std::vector<u16> &lzw_encode_2048(std::string &text) {
+		return lzw_encode(2048, text);
+	}
+
+	std::string &lzw_decode_8192(std::vector<u16> &comp_text) {
+		return lzw_decode(8192, comp_text);
+	}
+	
+	std::string &lzw_decode_4096(std::vector<u16> &comp_text) {
+		return lzw_decode(4096, comp_text);
+	}
+	
+	std::string &lzw_decode_2048(std::vector<u16> &comp_text) {
+		return lzw_decode(2048, comp_text);
 	}
 }
