@@ -3,7 +3,6 @@
 #include <cmath>
 #include <algorithm>
 
-#include "util.hpp"
 #include "measure.hpp"
 #include "compression.hpp"
 
@@ -27,20 +26,20 @@
 */
 
 namespace ctc {
-	int lzw_measure(std::string &text, lzw_encode_functional lzw) {
+	measure_type lzw_measure(std::string &text, lzw_encode_functional lzw) {
 		return lzw(text).size();
 	}
 	
-	int lzw_distance(std::string &a, std::string &b, lzw_encode_functional lzw) {
+	measure_type lzw_distance(std::string &a, std::string &b, lzw_encode_functional lzw) {
 		return std::abs(lzw_measure(a, lzw) - lzw_measure(b, lzw));
 	}
 
-	float lzw_similarity(std::string &a, std::string &b, lzw_encode_functional lzw) {
+	measure_type lzw_similarity(std::string &a, std::string &b, lzw_encode_functional lzw) {
 		std::string ab = a + b;
-		int a_measure = lzw_measure(a, lzw);
-		int b_measure = lzw_measure(b, lzw);
-		float min_measure = std::min(a_measure, b_measure);
-		float max_measure = std::max(a_measure, b_measure);
+		measure_type a_measure = lzw_measure(a, lzw);
+		measure_type b_measure = lzw_measure(b, lzw);
+		measure_type min_measure = std::min(a_measure, b_measure);
+		measure_type max_measure = std::max(a_measure, b_measure);
 		return 1.0f - ((lzw_measure(ab, lzw) - min_measure) / max_measure - 0.5f)*2;
 	}
 }
