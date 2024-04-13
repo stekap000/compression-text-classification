@@ -22,22 +22,20 @@
   for standard notion of distance d(x,y)=d(y,x). In other words we are finding length of minimal
   program capable of both translations.
 
-  
-  
   NID(x,y) = max{K(x|y), K(y|x)} / max{K(x), K(y)}
            = (K(y) - I(x:y)) / K(y), I(x:y) = K(y) - K(y|x)
 */
 
 namespace ctc {
-	int lzw_measure(std::string &text, std::function<std::vector<u16>&(std::string&)> lzw) {
+	int lzw_measure(std::string &text, lzw_encode_functional lzw) {
 		return lzw(text).size();
 	}
 	
-	int lzw_distance(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw) {
+	int lzw_distance(std::string &a, std::string &b, lzw_encode_functional lzw) {
 		return std::abs(lzw_measure(a, lzw) - lzw_measure(b, lzw));
 	}
 
-	float lzw_similarity(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw) {
+	float lzw_similarity(std::string &a, std::string &b, lzw_encode_functional lzw) {
 		std::string ab = a + b;
 		int a_measure = lzw_measure(a, lzw);
 		int b_measure = lzw_measure(b, lzw);

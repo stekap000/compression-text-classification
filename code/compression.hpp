@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+
 #include "util.hpp"
 
 namespace ctc {
