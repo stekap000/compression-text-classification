@@ -16,25 +16,26 @@ namespace ctc {
 		u16 next_code = 256;
 		std::string token;
 		std::string token_wide;
+		
+		// Loop through symbols until we form token that does not exist in the dictionary.
+		// Then, spit out code for token that is current token minus last character and store
+		// current token into dictionary.
 		for(std::string::iterator it = text.begin(); it != text.end(); ++it) {
 			token_wide.push_back(*it);
 			
-			// If the wide token is not in the dictionary.
 			if(dict->find(token_wide) == dict->end()) {
 				out->push_back(dict->at(token));
 				
-				// If we did not exceed dictionary limit.
-				if(next_code < dict_size) {
+				if(next_code < dict_size)
 					(*dict)[token_wide] = next_code++;
-					//std::cout << token_wide << " === " << (*dict)[token_wide] << std::endl;
-				}
 				
 				token_wide = *it;
 			}
 			
 			token = token_wide;
 		}
-	
+
+		// Handle edge case.
 		if(!token.empty())
 			out->push_back(dict->at(token));
 	
@@ -51,17 +52,19 @@ namespace ctc {
 		u16 next_code = 256;
 		std::string prev_token;
 		std::string token;
-		for(std::vector<u16>::iterator it = comp_text.begin(); it != comp_text.end(); ++it) {
-			if(dict->find(*it) != dict->end())
-				token = (*dict)[*it];
 
-			if(next_code < dict_size && prev_token.size() != 0) {
+		// Loop through codes and construct dictionary on the fly by merging current token's
+		// first symbol with the previous token. Then spit out token for given code.
+		// This is possible since we spit out code (during compression) for token minus last
+		// symbol before storing token into dictionary.
+		for(std::vector<u16>::iterator it = comp_text.begin(); it != comp_text.end(); ++it) {
+			token = (*dict)[*it];
+
+			// Construct dictionary entry.
+			if(next_code < dict_size && prev_token.size() != 0)
 				(*dict)[next_code++] = prev_token + token[0];
-				//std::cout << next_code - 1 << " === " << (*dict)[next_code - 1] << std::endl;
-			}
 			
 			*out = *out + dict->at(*it);
-			//std::cout << dict->at(*it);
 			prev_token = token;
 		}
 
