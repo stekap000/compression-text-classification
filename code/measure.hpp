@@ -7,5 +7,6 @@
 
 namespace ctc {
 	int lzw_measure(std::string &text, std::function<std::vector<u16>&(std::string&)> lzw);
-	int lzw_distance(std::string a, std::string b, std::function<std::vector<u16>&(std::string&)> lzw);
+	int lzw_distance(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw);
+	float lzw_similarity(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw);
 }

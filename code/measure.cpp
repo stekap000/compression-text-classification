@@ -1,6 +1,7 @@
 #include <string>
 #include <functional>
 #include <cmath>
+#include <algorithm>
 
 #include "util.hpp"
 #include "measure.hpp"
@@ -32,7 +33,16 @@ namespace ctc {
 		return lzw(text).size();
 	}
 	
-	int lzw_distance(std::string a, std::string b, std::function<std::vector<u16>&(std::string&)> lzw) {
+	int lzw_distance(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw) {
 		return std::abs(lzw_measure(a, lzw) - lzw_measure(b, lzw));
+	}
+
+	float lzw_similarity(std::string &a, std::string &b, std::function<std::vector<u16>&(std::string&)> lzw) {
+		std::string ab = a + b;
+		int a_measure = lzw_measure(a, lzw);
+		int b_measure = lzw_measure(b, lzw);
+		float min_measure = std::min(a_measure, b_measure);
+		float max_measure = std::max(a_measure, b_measure);
+		return 1.0f - ((lzw_measure(ab, lzw) - min_measure) / max_measure - 0.5f)*2;
 	}
 }
