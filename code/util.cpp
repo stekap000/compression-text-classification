@@ -23,13 +23,20 @@ namespace ctc {
 				case '!':
 				case '\n':
 				case '\r':
-					sentences->push_back(std::string());
+					if(sentences->back().compare(" ") == 0 || sentences->back().size() == 0)
+						sentences->back().clear();
+					else
+						sentences->push_back(std::string());
+					
 					break;
 				default:
 					(*sentences)[sentences->size() - 1].push_back(*it);
 				}
 			}
 		}
+
+		if(sentences->back().empty())
+			sentences->pop_back();
 
 		return *sentences;
 	}
