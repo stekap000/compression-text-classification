@@ -17,6 +17,8 @@ namespace ctc {
 		return os;
 	}
 
+	// TODO: Create similarity table for strings instead of doing it every time.
+	
 	void replace_cluster_strings(std::vector<Cluster> &clusters, std::vector<std::string> &strings, lzw_encode_functional lzw) {
 		for(Cluster &c : clusters)
 			c.strings.clear();
@@ -67,7 +69,7 @@ namespace ctc {
 	}
 	
 	std::vector<Cluster> &lzw_k_means(std::vector<std::string> &strings, int n, lzw_encode_functional lzw, int iteration_count) {
-		std::vector<Cluster> *clusters = new std::vector<Cluster>(3);
+		std::vector<Cluster> *clusters = new std::vector<Cluster>(n);
 		if(n <= 0) return *clusters;
 		
 		std::unordered_map<std::string, measure_type> *string_measure_map = new std::unordered_map<std::string, measure_type>();
